@@ -23,8 +23,8 @@
 
 ## GitHub Pages
 
-仓库 `Settings → Pages → Build and deployment` 选择 **GitHub Actions**。
-首次 Release 会自动部署 `site/`：落地页 + 插件商店 `index.json`/`.sig`/`packages` + `appcast.json`。
+仓库 `Settings → Pages → Build and deployment` 选择 **Deploy from a branch**，分支 `gh-pages`、目录 `/`。
+首发时已手动创建 `gh-pages`；后续 Release 工作流会把 `site/` 强制推送到 `gh-pages`，不需要 Actions Pages 部署权限。
 
 公开地址：
 
