@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据面板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="head">
+      <div>
+        <div class="eyebrow">WEB PLUGIN</div>
+        <h1 data-i18n="title">数据面板</h1>
+      </div>
+      <span class="badge">WKWebView</span>
+    </header>
+
+    <section class="stats">
+      <div class="card">
+        <div class="label" data-i18n="visits">打开次数</div>
+        <div class="value" id="visits">0</div>
+        <div class="hint" data-i18n="visitsHint">存在插件自己的 storage</div>
+      </div>
+      <div class="card">
+        <div class="label" data-i18n="clipLen">剪贴板字符</div>
+        <div class="value" id="clipLen">–</div>
+        <div class="hint" id="clipPreview"></div>
+      </div>
+    </section>
+
+    <section class="card chart-card">
+      <div class="chart-head">
+        <span class="label" data-i18n="last7">最近 7 天打开</span>
+        <span class="hint" id="chartTotal">0 次</span>
+      </div>
+      <div class="bars" id="bars"></div>
+      <div class="days" id="days"></div>
+    </section>
+
+    <section class="actions">
+      <button class="primary" id="copyTime" data-i18n="copyTime">复制当前时间</button>
+      <button id="readClip" data-i18n="readClip">读取剪贴板</button>
+      <button id="overview" data-i18n="overview">回到概览</button>
+      <button id="testNet" data-i18n="testNet">测试网络</button>
+      <button id="reset" data-i18n="reset">重置统计</button>
+    </section>
+
+    <p class="foot" data-i18n-html="foot">
+      这个页面由插件自己的 HTML/CSS 渲染；<code>storage</code>、<code>clipboard</code>、<code>ui</code>
+      都通过宿主注入的 <code>window.isla</code> 受限桥访问。未声明 <code>network</code> 权限时，所有 http(s) 请求会被拦截。
+    </p>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

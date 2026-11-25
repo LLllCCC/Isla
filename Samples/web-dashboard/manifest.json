@@ -1,0 +1,28 @@
+{
+  "id": "com.example.web-dashboard",
+  "name": "数据面板（Web）",
+  "version": "0.2.2",
+  "description": "Phase 3 示例：用自己的 HTML/CSS 画页面，通过 isla 桥读写存储与剪贴板。0.2.0 优化提示条并支持更新。",
+  "minAppVersion": "1.6.4",
+  "main": "main.js",
+  "icon": "chart.bar.xaxis",
+  "permissions": [
+    "storage",
+    "clipboard"
+  ],
+  "contributes": {
+    "pages": [
+      {
+        "id": "dashboard",
+        "title": "数据面板",
+        "icon": "chart.bar.xaxis",
+        "kind": "web",
+        "entry": "web/index.html",
+        "preferredHeight": 420,
+        "titleEn": "Data Dashboard"
+      }
+    ]
+  },
+  "nameEn": "Data Dashboard (Web)",
+  "descriptionEn": "Builds a dashboard with your own HTML/CSS and reads/writes storage and the clipboard through the isla bridge; demonstrates a kind=web plugin page."
+}

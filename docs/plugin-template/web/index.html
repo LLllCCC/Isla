@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0; padding: 14px 16px;
+    font: 13px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+    color: #1b1f24; background: transparent;
+  }
+  @media (prefers-color-scheme: dark) { body { color: #e8ecf1; } }
+  h1 { font-size: 15px; margin: 0 0 4px; }
+  p  { margin: 0 0 10px; opacity: .7; font-size: 12px; }
+  button {
+    font: inherit; padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    border: 1px solid rgba(128,128,128,.35); background: rgba(128,128,128,.12); color: inherit;
+  }
+  pre { font: 12px ui-monospace, Menlo, monospace; background: rgba(128,128,128,.12);
+        padding: 8px 10px; border-radius: 8px; margin: 10px 0 0; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+  <h1 id="title">Isla Web 页</h1>
+  <p id="sub">这是 kind = "web" 的自定义页，完整 HTML/CSS/JS 随便写。</p>
+  <button id="btn"></button>
+  <pre id="out"></pre>
+
+<script>
+  // window.isla 是宿主给 Web 页的受限桥：
+  //   isla.plugin      { id, page }
+  //   isla.version     App 版本
+  //   isla.locale      当前界面语言（"zh-Hans" / "en" …）
+  //   isla.dark        是否深色
+  //   isla.permissions 本插件被授予的权限
+  //   isla.storage     get / set / remove（异步，返回 Promise）
+  //   isla.clipboard   readText / writeText
+  //   isla.ui          openPage(id)
+  //   isla.log(...)    写插件日志
+  const isla = window.isla
+  const isEn = String(isla.locale || "").toLowerCase().indexOf("en") === 0
+
+  document.getElementById("title").textContent = isEn ? "Isla Web Page" : "Isla Web 页"
+  document.getElementById("btn").textContent = isEn ? "Save count" : "保存计数"
+  document.getElementById("sub").textContent = isEn
+    ? "A kind=\"web\" page: write any HTML/CSS/JS you like."
+    : "这是 kind = \"web\" 的自定义页，完整 HTML/CSS/JS 随便写。"
+
+  const out = document.getElementById("out")
+  const show = (v) => { out.textContent = JSON.stringify(v, null, 2) }
+
+  // 存储：需要 manifest 里声明 "storage" 权限
+  isla.storage.get("webCount").then((n) => {
+    show({ locale: isla.locale, dark: isla.dark, permissions: isla.permissions, webCount: n || 0 })
+  })
+
+  document.getElementById("btn").addEventListener("click", () => {
+    isla.storage.get("webCount").then((n) => {
+      const next = (n || 0) + 1
+      return isla.storage.set("webCount", next).then(() => {
+        show({ saved: next })
+        isla.log("web page saved count", next)
+      })
+    })
+  })
+</script>
+</body>
+</html>

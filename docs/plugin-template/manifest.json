@@ -1,0 +1,52 @@
+{
+  "id": "com.example.plugin-template",
+  "name": "插件模板",
+  "nameEn": "Plugin Template",
+  "version": "0.1.0",
+  "description": "复制这个目录就能开始写插件：声明式页面 + Web 页面 + 概览卡片 + 胶囊模式 + 命令 + 事件。",
+  "descriptionEn": "Copy this folder to start writing plugins: declarative page, web page, overview card, capsule mode, commands and events.",
+  "minAppVersion": "1.6.4",
+  "apiVersion": 1,
+  "main": "main.js",
+  "icon": "puzzlepiece.extension",
+  "permissions": ["storage"],
+  "contributes": {
+    "pages": [
+      {
+        "id": "hello",
+        "title": "模板页面",
+        "titleEn": "Template Page",
+        "icon": "hand.wave",
+        "kind": "js",
+        "preferredHeight": 240
+      },
+      {
+        "id": "webdemo",
+        "title": "Web 页面示例",
+        "titleEn": "Web Page Demo",
+        "icon": "globe",
+        "kind": "web",
+        "entry": "web/index.html",
+        "preferredHeight": 260
+      }
+    ],
+    "panelCards": [
+      {
+        "id": "hello-card",
+        "title": "模板卡片",
+        "titleEn": "Template Card",
+        "defaultSize": { "w": 180, "h": 76 }
+      }
+    ],
+    "capsuleModes": [
+      { "id": "hello-capsule", "title": "模板胶囊", "titleEn": "Template Capsule" }
+    ],
+    "commands": [
+      { "id": "hello-say", "title": "打个招呼", "titleEn": "Say hello" }
+    ]
+  },
+  "events": {
+    "publish": ["template.ping"],
+    "subscribe": ["template.pong"]
+  }
+}

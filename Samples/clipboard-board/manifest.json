@@ -1,0 +1,63 @@
+{
+  "id": "com.example.clipboard-board",
+  "name": "剪贴板看板",
+  "version": "0.4.2",
+  "description": "把最近的剪贴板内容排成看板：文本、图片、文件都能复制，固定与删除会同步主 App 历史；概览有「最近复制」卡片，胶囊可显示条数。",
+  "minAppVersion": "1.5.12",
+  "main": "main.js",
+  "icon": "square.grid.2x2",
+  "permissions": [
+    "clipboard",
+    "storage"
+  ],
+  "events": {
+    "publish": [
+      "clipboard.board.changed"
+    ],
+    "subscribe": []
+  },
+  "contributes": {
+    "pages": [
+      {
+        "id": "board",
+        "title": "剪贴板看板",
+        "icon": "square.grid.2x2",
+        "kind": "js",
+        "preferredHeight": 480,
+        "titleEn": "Clipboard Board"
+      }
+    ],
+    "panelCards": [
+      {
+        "id": "recent",
+        "title": "最近复制",
+        "defaultSize": {
+          "w": 180,
+          "h": 76
+        },
+        "titleEn": "Recent copy"
+      }
+    ],
+    "capsuleModes": [
+      {
+        "id": "count",
+        "title": "剪贴板条数",
+        "titleEn": "Clipboard count"
+      }
+    ],
+    "commands": [
+      {
+        "id": "copy-latest",
+        "title": "复制最近一条",
+        "titleEn": "Copy latest"
+      },
+      {
+        "id": "copy-previous",
+        "title": "复制上一条",
+        "titleEn": "Copy previous"
+      }
+    ]
+  },
+  "nameEn": "Clipboard Board",
+  "descriptionEn": "Lays recent clipboard items out as a board: text, images and files can be copied; pinning and deleting sync with the main app history. The overview shows a Recent copy card and the capsule can display the item count."
+}

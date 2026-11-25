@@ -1,0 +1,162 @@
+/* 颜色全部来自宿主注入的 CSS 变量，深浅色主题自动跟随。 */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  height: 100%;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--isla-text-3);
+}
+
+h1 {
+  margin: 2px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.badge {
+  font-size: 9px;
+  color: var(--isla-accent);
+  border: 0.6px solid var(--isla-accent);
+  border-radius: 999px;
+  padding: 3px 8px;
+  opacity: 0.85;
+}
+
+.card {
+  background: var(--isla-surface);
+  border: 0.6px solid var(--isla-stroke);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.label {
+  font-size: 10px;
+  color: var(--isla-text-2);
+}
+
+.value {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--isla-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.hint {
+  font-size: 9.5px;
+  color: var(--isla-text-3);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 54px;
+  margin-top: 8px;
+}
+
+.bar {
+  flex: 1;
+  min-height: 3px;
+  border-radius: 4px 4px 2px 2px;
+  background: var(--isla-accent);
+  opacity: 0.75;
+  transition: height 0.25s ease;
+}
+
+.bar.today {
+  opacity: 1;
+}
+
+.days {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 8.5px;
+  color: var(--isla-text-3);
+}
+
+.days span {
+  flex: 1;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.actions button {
+  font-size: 10.5px;
+  padding: 5px 9px;
+}
+
+.foot {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.5;
+  color: var(--isla-text-3);
+}
+
+.foot code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8.5px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  z-index: 10;
+  transform: translateX(-50%) translateY(8px);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  white-space: nowrap;
+  background: var(--isla-solid);
+  border: 0.6px solid var(--isla-stroke);
+  color: var(--isla-text);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

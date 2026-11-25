@@ -1,0 +1,47 @@
+{
+  "name" : "Isla 示例商店",
+  "nameEn" : "Isla Sample Store",
+  "plugins" : [
+    {
+      "author" : "Isla",
+      "id" : "com.example.clipboard-board",
+      "minAppVersion" : "1.5.12",
+      "name" : "剪贴板看板",
+      "nameEn" : "Clipboard Board",
+      "package" : "packages/com.example.clipboard-board-0.4.2.zip",
+      "permissions" : [
+        "clipboard",
+        "storage"
+      ],
+      "sha256" : "b92cbda1885d6a8a6e75db9ea1e02d873e009949d60d66959a6393fe989b2e2c",
+      "size" : 4434,
+      "summary" : "把最近的剪贴板内容排成看板：文本、图片、文件都能复制，固定与删除会同步主 App 历史；概览有「最近复制」卡片，胶囊可显示条数。",
+      "summaryEn" : "Lays recent clipboard items out as a board: text, images and files can be copied; pinning and deleting sync with the main app history. The overview shows a Recent copy card and the capsule can display the item count.",
+      "version" : "0.4.2"
+    },
+    {
+      "author" : "Isla",
+      "id" : "com.example.web-dashboard",
+      "minAppVersion" : "1.6.4",
+      "name" : "数据面板（Web）",
+      "nameEn" : "Data Dashboard (Web)",
+      "package" : "packages/com.example.web-dashboard-0.2.2.zip",
+      "permissions" : [
+        "storage",
+        "clipboard"
+      ],
+      "sha256" : "9ad6415fd85929bd7f3e4769de338f5034d8e7dccf41e01af391aed48cb9ebb2",
+      "size" : 8154,
+      "summary" : "用自己的 HTML/CSS 画一个网页面板，通过 isla 桥读写存储与剪贴板；演示 kind=web 的插件页。",
+      "summaryEn" : "Builds a dashboard with your own HTML/CSS and reads/writes storage and the clipboard through the isla bridge; demonstrates a kind=web plugin page.",
+      "version" : "0.2.2"
+    }
+  ],
+  "publisher" : {
+    "keyID" : "0b52676ad8e95289",
+    "name" : "Isla",
+    "publicKey" : "REabHGrblkP6pnaaOpYwVr9k2t9WhGxrwIf+tgFJGWI="
+  },
+  "schema" : 1,
+  "updatedAt" : "2026-11-24T23:37:00Z"
+}

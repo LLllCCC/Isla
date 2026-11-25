@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "name": "坏索引测试",
+  "plugins": [
+    {
+      "id": "com.example.ok",
+      "name": "合法条目",
+      "version": "1.0.0",
+      "summary": "唯一应该留下的条目",
+      "package": "packages/ok.zip",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 100
+    },
+    {
+      "id": "com.example.nosha",
+      "name": "没有哈希",
+      "version": "1.0.0",
+      "package": "packages/nosha.zip"
+    },
+    {
+      "id": "com.example.evil",
+      "name": "明文远端地址",
+      "version": "1.0.0",
+      "package": "http://example.com/evil.zip",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size": 100
+    },
+    {
+      "id": "com.example.ok",
+      "name": "重复 id",
+      "version": "2.0.0",
+      "package": "packages/dup.zip",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "size": 100
+    },
+    {
+      "id": "bad id!",
+      "name": "非法 id",
+      "version": "1.0.0",
+      "package": "packages/bad.zip",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "size": 100
+    },
+    {
+      "id": "com.example.noname",
+      "name": "",
+      "version": "1.0.0",
+      "package": "packages/noname.zip",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "size": 100
+    }
+  ]
+}

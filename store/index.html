@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isla 插件商店</title>
+<style>
+  :root {
+    --bg: #0b0d10; --panel: #14171c; --line: #262b33;
+    --text: #e8ecf1; --muted: #8b94a3; --accent: #6ee7b7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 48px 20px 80px; background: var(--bg); color: var(--text);
+    font: 15px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .mark {
+    width: 30px; height: 30px; border-radius: 9px; background: #000;
+    border: 1px solid #2c323c; display: grid; place-items: center; gap: 3px;
+    grid-auto-flow: column;
+  }
+  .mark i { display: block; width: 3px; border-radius: 2px; background: var(--accent); }
+  .mark i:nth-child(1) { height: 9px; }
+  .mark i:nth-child(2) { height: 15px; }
+  .mark i:nth-child(3) { height: 11px; }
+  h1 { font-size: 24px; margin: 0; letter-spacing: .2px; }
+  .sub { color: var(--muted); margin: 2px 0 28px; font-size: 13px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 12px;
+  }
+  .row { display: flex; align-items: baseline; gap: 10px; }
+  .name { font-weight: 600; }
+  .ver { color: var(--muted); font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .desc { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .meta { color: #6b7484; font-size: 12px; margin-top: 8px; }
+  code {
+    background: #0f1216; border: 1px solid var(--line); border-radius: 6px;
+    padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #cfe9df; word-break: break-all;
+  }
+  .note { color: var(--muted); font-size: 13px; margin-top: 26px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <span class="mark"><i></i><i></i><i></i></span>
+    <h1>Isla 插件商店</h1>
+  </div>
+  <p class="sub">这是一个静态商店源：一个 index.json + 若干 zip 安装包，没有服务端逻辑。</p>
+  <p class="sub" id="pub">正在检查签名…</p>
+
+  <div id="list"></div>
+
+  <p class="note">
+    在 Isla 里打开 设置 → 插件 → 插件商店（远端）→ 添加…，把下面这个地址粘进去：<br>
+    <code id="src"></code>
+  </p>
+  <p class="note">
+    索引地址就是信任根。Isla 只校验 HTTPS 传输与安装包的 SHA-256，尚未做发布者签名，
+    请只添加你信任的商店源。安装时仍会逐项确认权限。
+  </p>
+</main>
+<script>
+  const base = location.origin + location.pathname.replace(/index\.html$/, "");
+  const src = base + "index.json" + location.search;
+  document.getElementById("src").textContent = src;
+  fetch(src, { cache: "no-store" })
+    .then(r => r.json())
+    .then(idx => {
+      const pub = document.getElementById("pub");
+      if (idx.publisher) {
+        pub.textContent = "发布者 " + idx.publisher.name + " · 已签名（指纹 " + idx.publisher.keyID + "）";
+        pub.style.color = "var(--accent)";
+      } else {
+        pub.textContent = "未签名：无法确认发布者，Isla 安装前会再次确认。";
+      }
+      const list = document.getElementById("list");
+      (idx.plugins || []).forEach(p => {
+        const el = document.createElement("div");
+        el.className = "card";
+        const perms = (p.permissions || []).length;
+        const size = p.size ? (p.size / 1024).toFixed(1) + " KB" : "";
+        el.innerHTML =
+          '<div class="row"><span class="name"></span><span class="ver"></span></div>' +
+          '<div class="desc"></div><div class="meta"></div>';
+        el.querySelector(".name").textContent = p.name || p.id;
+        el.querySelector(".ver").textContent = "v" + (p.version || "?");
+        el.querySelector(".desc").textContent = p.summary || "";
+        el.querySelector(".meta").textContent =
+          [p.author, size, perms ? perms + " 项权限" : ""].filter(Boolean).join(" · ");
+        list.appendChild(el);
+      });
+      if (!(idx.plugins || []).length) list.textContent = "商店里还没有插件。";
+    })
+    .catch(err => {
+      document.getElementById("list").textContent = "读取 index.json 失败：" + err;
+    });
+</script>
+</body>
+</html>
