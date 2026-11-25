@@ -5,7 +5,7 @@
 - `BUILD_NUMBER` 是唯一的 build 号来源（`build.sh` 优先级：`ISLA_BUILD` > `BUILD_NUMBER` > 提交数）。
 - 发版前把 `BUILD_NUMBER` 加一，提交，再打 `vX.Y.Z` tag。
 - 首个公开版：`v1.7.0` / build `110`；当前：`v1.7.1` / build `111`。
-- CI/Release 使用 `macos-15`。==不要改回 `macos-13`==：该镜像已于 2025-12-04 退役，任务会一直排队。
+- CI/Release 使用 `macos-15`。**不要改回 `macos-13`**：该镜像已于 2025-12-04 退役，任务会一直排队。
 
 ## GitHub Secrets
 
