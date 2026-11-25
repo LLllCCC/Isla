@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Import self-signed signing certificate
+        env:
+          P12_BASE64: ${{ secrets.ISLA_SIGN_CERT_P12 }}
+          P12_PASSWORD: ${{ secrets.ISLA_SIGN_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.ISLA_KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${P12_BASE64:-}" ] || [ -z "${P12_PASSWORD:-}" ]; then
+            echo "缺少 ISLA_SIGN_CERT_P12 / ISLA_SIGN_CERT_PASSWORD secrets"
+            exit 1
+          fi
+          echo "$P12_BASE64" | base64 -D > "$RUNNER_TEMP/isla-sign.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security import "$RUNNER_TEMP/isla-sign.p12" -k build.keychain \
+            -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PASSWORD" build.keychain >/dev/null
+          security list-keychains -d user -s build.keychain
+
+      - name: Build and package
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          BUILD="$(tr -d '[:space:]' < BUILD_NUMBER)"
+          ISLA_VERSION="$VERSION" ISLA_BUILD="$BUILD" zsh ./build.sh
+          codesign -d --verbose=4 build/Isla.app 2>&1 | grep -q "Authority=Isla Self Signed" \
+            || { echo "构建产物没有用 Isla Self Signed 签名"; exit 1; }
+          zsh ./tools/make-dmg.sh
+
+      - name: Generate and sign appcast
+        env:
+          ISLA_APPCAST_KEY_JSON: ${{ secrets.ISLA_APPCAST_KEY }}
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          BUILD="$(tr -d '[:space:]' < BUILD_NUMBER)"
+          ZIP="dist/Isla-${VERSION}-${BUILD}.zip"
+          DMG="dist/Isla-${VERSION}-${BUILD}.dmg"
+          NOTES="release-notes/${VERSION}.md"
+          [ -f "$NOTES" ] || NOTES=""
+          echo "$ISLA_APPCAST_KEY_JSON" > "$RUNNER_TEMP/isla-appcast-key.json"
+          chmod 600 "$RUNNER_TEMP/isla-appcast-key.json"
+          ISLA_APPCAST_KEY="$RUNNER_TEMP/isla-appcast-key.json" \
+            zsh ./tools/make-appcast.sh "$VERSION" "$BUILD" "$ZIP" "$DMG" "$NOTES"
+
+      - name: Assemble Pages site
+        run: |
+          set -euo pipefail
+          mkdir -p site/packages
+          cp store/index.json site/index.json
+          cp store/index.json.sig site/index.json.sig
+          cp store/packages/*.zip site/packages/
+          cp dist/appcast.json site/appcast.json
+
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#v}"
+          BUILD="$(tr -d '[:space:]' < BUILD_NUMBER)"
+          NOTES="release-notes/${VERSION}.md"
+          if [ -f "$NOTES" ]; then
+            NOTES_ARG="--notes-file $NOTES"
+          else
+            NOTES_ARG="--generate-notes"
+          fi
+          gh release create "v$VERSION" --draft --title "Isla v$VERSION" $NOTES_ARG \
+            "dist/Isla-${VERSION}-${BUILD}.dmg" \
+            "dist/Isla-${VERSION}-${BUILD}.zip" \
+            "dist/Isla-${VERSION}-${BUILD}.sha256" \
+            "dist/appcast.json"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "v${GITHUB_REF_NAME#v}" --draft=false
+
+      - name: Deploy Pages (gh-pages)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd site
+          git init -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "site: ${GITHUB_REF_NAME}"
+          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

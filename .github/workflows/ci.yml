@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: zsh ./build.sh
+
+      - name: Sim assertions, update helper, i18n
+        run: zsh ./tools/selfcheck.sh --ci
