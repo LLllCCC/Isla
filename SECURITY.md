@@ -4,7 +4,7 @@
 
 请不要在公开 issue 里披露可被利用的漏洞。优先使用 GitHub 的
 [Private vulnerability reporting](https://github.com/LLllCCC/Isla/security/advisories/new)，
-或发邮件给仓库维护者（见 GitHub 个人主页）。请附复现步骤、影响范围和版本/build。
+或发邮件至 [abuse@yopo.ccwu.cc](mailto:abuse@yopo.ccwu.cc)。请附复现步骤、影响范围和版本/build。
 
 ## 更新信任模型
 

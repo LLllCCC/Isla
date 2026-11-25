@@ -30,3 +30,4 @@ open build/Isla.app
 - UI 改动附截图（不要包含个人菜单栏图标、用户名或第三方 App 通知）。
 - 不要修改 `com.yopo.isla` bundle id 或安装路径：更新和 TCC 辅助功能授权依赖它。
 - 安全问题不要开公开 issue，见 [SECURITY.md](SECURITY.md)。
+- 其他问题或建议也可以发邮件至 [abuse@yopo.ccwu.cc](mailto:abuse@yopo.ccwu.cc)。

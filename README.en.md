@@ -66,6 +66,10 @@ The plugin store index is signed with Ed25519. Signing proves the index source, 
 - The Centered curtain occupies a menu bar slot; its position is controlled by macOS and is not necessarily the geometric screen centre.
 - On macOS 27 the status item window coordinates are often unreadable, so the slot is derived via AX scanning (first launch may need 2–3 seconds to settle).
 
+## Contact
+
+Questions, suggestions and security reports: [abuse@yopo.ccwu.cc](mailto:abuse@yopo.ccwu.cc). Issues and PRs are also welcome on GitHub.
+
 ## License
 
 [MIT](LICENSE)

@@ -88,6 +88,10 @@ open build/Isla.app
 - macOS 27 上系统状态项窗口坐标常常不可读，槽位靠 AX 扫描反推，首次启动可能需要 2–3 秒校正。
 - 插件安装会修改 `~/Library/Application Support/Isla`；卸载时可一并删除。
 
+## 联系
+
+问题、建议或安全问题都可以发送至 [abuse@yopo.ccwu.cc](mailto:abuse@yopo.ccwu.cc)，也欢迎在 GitHub 提 issue / PR。
+
 ## 结构
 
 ```

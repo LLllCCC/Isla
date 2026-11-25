@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 邮件联系
+    url: mailto:abuse@yopo.ccwu.cc
+    about: 问题、建议或安全问题都可以发送到该邮箱
