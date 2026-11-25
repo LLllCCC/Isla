@@ -4,11 +4,14 @@
 
 - `BUILD_NUMBER` 是唯一的 build 号来源（`build.sh` 优先级：`ISLA_BUILD` > `BUILD_NUMBER` > 提交数）。
 - 发版前把 `BUILD_NUMBER` 加一，提交，再打 `vX.Y.Z` tag。
-- 首个公开版：`v1.7.0` / build `110`。
+- 首个公开版：`v1.7.0` / build `110`；当前：`v1.7.1` / build `111`。
+- CI/Release 使用 `macos-15`。==不要改回 `macos-13`==：该镜像已于 2025-12-04 退役，任务会一直排队。
 
 ## GitHub Secrets
 
 在 `Settings → Secrets and variables → Actions` 添加（值只在本机生成，不写进仓库）：
+
+> 2026-11-25 已配置完成；换证书或轮换 appcast key 时按下表更新。
 
 | Secret | 用途 |
 |---|---|
@@ -48,18 +51,29 @@ tag 推送后 `.github/workflows/release.yml` 会：
 4. 创建 draft Release、上传资产、再 publish；
 5. 部署 Pages。
 
+arm64 runner 可能出现容量排队（十几分钟）；用 `gh run list` / `gh run view` 看进度，不要因为排队就重复推 tag。
+
 ## 本地验收
 
 ```bash
-ISLA_VERSION=1.7.0 ISLA_BUILD=110 zsh ./build.sh
+ISLA_VERSION=1.7.1 ISLA_BUILD=111 zsh ./build.sh
 zsh ./tools/selfcheck.sh
 zsh ./tools/make-dmg.sh
 ISLA_APPCAST_KEY="$HOME/.isla-appcast-key.json" \
-  zsh ./tools/make-appcast.sh 1.7.0 110 dist/Isla-1.7.0-110.zip dist/Isla-1.7.0-110.dmg release-notes/v1.7.0.md
+  zsh ./tools/make-appcast.sh 1.7.1 111 dist/Isla-1.7.1-111.zip dist/Isla-1.7.1-111.dmg release-notes/v1.7.1.md
 ```
 
 App 内更新验收：用 `--update-now` + `ISLA_UPDATE_URL=http://127.0.0.1:PORT/appcast.json` 启动一个测试副本，
 点击「直接更新并重启」，确认版本/build 变化、设置与辅助功能授权保留。
+
+公开通道验收（每次发版后）：
+
+```bash
+# 线上 appcast 应指向新 build
+curl -s "https://llllccc.github.io/Isla/appcast.json?t=$(date +%s)" \
+  | python3 -c "import json,sys,base64; d=json.load(sys.stdin); p=json.loads(base64.b64decode(d['payload'])); print(p['version'], p['build'])"
+# 旧版 App 打开「检查更新…」，确认能发现新版本并直接更新、重启
+```
 
 ## 回滚
 

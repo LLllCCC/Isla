@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.7.1 (build 111) — 2026-11-25
+
+维护版本。
+
+- 公开联系邮箱 `abuse@yopo.ccwu.cc`：README、SECURITY、CONTRIBUTING、issue 模板与落地页均可找到。
+- CI/Release 迁移到 `macos-15`（macOS 13 runner 已退役）。
+- 通过公开更新通道完成 1.7.0 → 1.7.1 真实自更新验收。
+
 ## v1.7.0 (build 110) — 2026-11-25
 
 首个公开版本。
