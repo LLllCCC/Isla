@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Isla · macOS 灵动岛</title>
+<style>
+  :root {
+    --bg: #0b0d10; --panel: #14171c; --line: #262b33;
+    --text: #e8ecf1; --muted: #8b94a3; --accent: #6ee7b7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 56px 20px 80px; background: var(--bg); color: var(--text);
+    font: 15px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .mark {
+    width: 36px; height: 36px; border-radius: 10px; background: #000;
+    border: 1px solid #2c323c; display: grid; place-items: center; gap: 3px;
+    grid-auto-flow: column;
+  }
+  .mark i { display: block; width: 3px; border-radius: 2px; background: var(--accent); }
+  .mark i:nth-child(1) { height: 10px; }
+  .mark i:nth-child(2) { height: 18px; }
+  .mark i:nth-child(3) { height: 13px; }
+  h1 { font-size: 28px; margin: 0; letter-spacing: .2px; }
+  h2 { font-size: 16px; margin: 0 0 10px; }
+  .sub { color: var(--muted); margin: 2px 0 24px; font-size: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 20px; margin-bottom: 12px;
+  }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn {
+    display: inline-block; padding: 9px 16px; border-radius: 9px; text-decoration: none;
+    background: var(--accent); color: #06110c; font-weight: 600; font-size: 14px;
+  }
+  .btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--line); }
+  .row { display: flex; align-items: baseline; gap: 10px; }
+  .name { font-weight: 600; }
+  .ver { color: var(--muted); font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .desc { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .meta { color: #6b7484; font-size: 12px; margin-top: 8px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  a { color: var(--accent); }
+  code {
+    background: #0f1216; border: 1px solid var(--line); border-radius: 6px;
+    padding: 2px 6px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #cfe9df; word-break: break-all;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <span class="mark"><i></i><i></i><i></i></span>
+    <h1>Isla</h1>
+  </div>
+  <p class="sub">macOS 菜单栏灵动岛 · 胶囊 / 面板 / 插件系统 · 开源 MIT</p>
+
+  <div class="card">
+    <h2>下载 Isla</h2>
+    <p class="muted">macOS 14+，不需要 Xcode。当前版本从 GitHub Releases 获取。</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/LLllCCC/Isla/releases/latest">下载最新版</a>
+      <a class="btn secondary" href="https://github.com/LLllCCC/Isla">源码 / 文档</a>
+      <a class="btn secondary" href="https://github.com/LLllCCC/Isla/blob/main/LICENSE">MIT License</a>
+    </div>
+    <p class="note">
+      当前是自签、未公证版本。首次打开若被 Gatekeeper 拦截，请到
+      「系统设置 → 隐私与安全性」点「仍要打开」；之后可正常双击。
+      设置 → 关于里可以检查更新，支持「下载安装包」或「直接更新并重启」。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>插件商店</h2>
+    <p class="muted" id="pub">正在检查签名…</p>
+    <div id="list"></div>
+    <p class="note">
+      在 Isla 里打开 设置 → 插件 → 插件商店（远端）→ 添加…，把下面这个地址粘进去：<br>
+      <code id="src"></code>
+    </p>
+  </div>
+
+  <p class="note">
+    插件索引使用 Ed25519 发布者签名；签名只证明索引来源，不代表插件代码审计。
+    安装时 Isla 仍会逐项确认权限。
+  </p>
+  <p class="note">
+    问题、建议或安全问题：<a href="mailto:abuse@yopo.ccwu.cc">abuse@yopo.ccwu.cc</a>
+  </p>
+</main>
+<script>
+  const base = location.origin + location.pathname.replace(/index\.html$/, "");
+  const src = base + "index.json";
+  document.getElementById("src").textContent = src;
+  fetch(src, { cache: "no-store" })
+    .then(r => r.json())
+    .then(idx => {
+      const pub = document.getElementById("pub");
+      if (idx.publisher) {
+        pub.textContent = "发布者 " + idx.publisher.name + " · 已签名（指纹 " + idx.publisher.keyID + "）";
+        pub.style.color = "var(--accent)";
+      } else {
+        pub.textContent = "未签名：无法确认发布者，Isla 安装前会再次确认。";
+      }
+      const list = document.getElementById("list");
+      (idx.plugins || []).forEach(p => {
+        const el = document.createElement("div");
+        el.className = "card";
+        const perms = (p.permissions || []).length;
+        const size = p.size ? (p.size / 1024).toFixed(1) + " KB" : "";
+        el.innerHTML =
+          '<div class="row"><span class="name"></span><span class="ver"></span></div>' +
+          '<div class="desc"></div><div class="meta"></div>';
+        el.querySelector(".name").textContent = p.name || p.id;
+        el.querySelector(".ver").textContent = "v" + (p.version || "?");
+        el.querySelector(".desc").textContent = p.summary || "";
+        el.querySelector(".meta").textContent =
+          [p.author, size, perms ? perms + " 项权限" : ""].filter(Boolean).join(" · ");
+        list.appendChild(el);
+      });
+      if (!(idx.plugins || []).length) list.textContent = "商店里还没有插件。";
+    })
+    .catch(err => {
+      document.getElementById("list").textContent = "读取 index.json 失败：" + err;
+    });
+</script>
+</body>
+</html>
