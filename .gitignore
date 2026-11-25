@@ -4,6 +4,7 @@ build/
 dist/
 *.dmg
 *.zip
+!store/packages/*.zip
 *.sha256
 *.p12
 *.cer
